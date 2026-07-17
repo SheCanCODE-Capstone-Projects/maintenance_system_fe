@@ -1,0 +1,1 @@
+export default function CategoriesPage() { return <section className="mx-auto max-w-5xl p-8"><h1 className="text-2xl font-bold">Categories</h1><p className="mt-2 text-slate-600">Configure the maintenance service categories available on the platform.</p></section>; }

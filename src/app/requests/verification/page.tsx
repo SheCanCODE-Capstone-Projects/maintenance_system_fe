@@ -1,0 +1,1 @@
+export default function Page() { return <section className="mx-auto max-w-4xl p-8"><h1 className="text-2xl font-bold">Request verification</h1><p className="mt-2 text-slate-600">Review and verify completed maintenance requests.</p></section>; }
