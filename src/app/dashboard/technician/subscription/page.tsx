@@ -1,0 +1,1 @@
+export default function SubscriptionPage() { return <section className="mx-auto max-w-4xl p-8"><h1 className="text-2xl font-bold">Subscription</h1><p className="mt-2 text-slate-600">Manage your technician plan and billing details.</p></section>; }

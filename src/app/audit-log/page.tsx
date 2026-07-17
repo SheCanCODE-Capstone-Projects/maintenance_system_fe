@@ -1,0 +1,1 @@
+export default function Page() { return <section className="mx-auto max-w-5xl p-8"><h1 className="text-2xl font-bold">Audit log</h1><p className="mt-2 text-slate-600">System activity will appear here.</p></section>; }
