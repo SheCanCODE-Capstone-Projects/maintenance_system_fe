@@ -1,1 +1,2 @@
-export { default } from "@/app/settings/page";
+import AccountSettings from "./AccountSettings";
+export default AccountSettings;
