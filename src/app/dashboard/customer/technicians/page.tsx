@@ -1,1 +1,2 @@
-export default function TechniciansPage() { return <section className="mx-auto max-w-4xl p-8"><h1 className="text-2xl font-bold">Find technicians</h1><p className="mt-2 text-slate-600">Browse verified technicians and companies for your maintenance needs.</p></section>; }
+import FindTechnicians from "./FindTechnicians";
+export default FindTechnicians;
