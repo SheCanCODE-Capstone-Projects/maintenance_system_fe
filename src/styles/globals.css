@@ -1,9 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 html, body {
   @apply font-sans bg-bg text-text;
 }
+
+/* Customer designs use compact cards; keep their text comfortably readable. */
+.customer-ui [class~="text-[8px]"] { font-size: 0.625rem !important; }
+.customer-ui [class~="text-[9px]"] { font-size: 0.6875rem !important; }
+.customer-ui [class~="text-[10px]"] { font-size: 0.75rem !important; }
+.customer-ui [class~="text-[11px]"] { font-size: 0.8125rem !important; }
+.customer-ui [class~="text-[12px]"] { font-size: 0.875rem !important; }
+.customer-ui [class~="text-[13px]"] { font-size: 1rem !important; }
