@@ -12,9 +12,9 @@ export default function LandingFooter() {
     <footer className="bg-secondary text-gray-400 py-14">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 grid sm:grid-cols-3 gap-10 mb-10">
         <div>
-          <span className="font-heading font-bold text-xl text-white">
+          <Link href="/" className="font-heading font-bold text-xl text-white hover:opacity-80 transition-opacity">
             Maintenance<span className="text-primary">Hub</span>
-          </span>
+          </Link>
           <p className="mt-3 text-sm leading-relaxed">
             Rwanda&apos;s trusted platform connecting customers with verified maintenance professionals.
           </p>

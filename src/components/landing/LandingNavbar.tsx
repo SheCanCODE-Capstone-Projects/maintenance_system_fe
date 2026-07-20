@@ -9,9 +9,9 @@ export default function LandingNavbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 h-16 flex items-center justify-between">
-        <span className="font-heading font-bold text-xl text-secondary">
+        <Link href="/" className="font-heading font-bold text-xl text-secondary hover:opacity-80 transition-opacity">
           Maintenance<span className="text-primary">Hub</span>
-        </span>
+        </Link>
         <ul className="hidden md:flex gap-8 text-sm font-medium text-gray-600">
           {links.map((l) => (
             <li key={l}>
