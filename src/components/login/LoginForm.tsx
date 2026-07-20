@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Wrench } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -17,6 +18,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function LoginForm() {
+  const router = useRouter();
   const [role, setRole] = useState<Role>("customer");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -27,9 +29,13 @@ export default function LoginForm() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = async (data: FormData) => {
-    // Auth submission handled by existing authService — placeholder for integration
-    void data;
-    void role;
+    const target = {
+      customer: "/dashboard/customer",
+      technician: "/dashboard/technician",
+      company: "/dashboard/company",
+      admin: "/dashboard/admin",
+    }[role];
+    router.push(target);
   };
 
   return (
