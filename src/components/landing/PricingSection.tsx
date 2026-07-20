@@ -77,7 +77,7 @@ const timeline = [
 export default function PricingSection() {
   return (
     <section id="pricing" className="py-24 bg-bg">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 xl:px-32">
 
         {/* Header */}
         <div className="text-center mb-16">

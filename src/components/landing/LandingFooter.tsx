@@ -10,7 +10,7 @@ const socials = [
 export default function LandingFooter() {
   return (
     <footer className="bg-secondary text-gray-400 py-14">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 grid sm:grid-cols-3 gap-10 mb-10">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 xl:px-32 grid sm:grid-cols-3 gap-10 mb-10">
         <div>
           <Link href="/" className="font-heading font-bold text-xl text-white hover:opacity-80 transition-opacity">
             Maintenance<span className="text-primary">Hub</span>
@@ -47,7 +47,7 @@ export default function LandingFooter() {
           </ul>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 border-t border-white/10 pt-6 text-center text-xs">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 xl:px-32 border-t border-white/10 pt-6 text-center text-xs">
         © {new Date().getFullYear()} MaintenanceHub. All rights reserved.
       </div>
     </footer>

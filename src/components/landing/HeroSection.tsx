@@ -37,8 +37,8 @@ function ServiceCard() {
 
 export default function HeroSection() {
   return (
-    <section className="pt-28 pb-20 bg-bg" id="hero">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 flex flex-col lg:flex-row items-center gap-16">
+    <section className="pt-28 pb-24 bg-bg" id="hero">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 xl:px-32 flex flex-col lg:flex-row items-center gap-16">
         <div className="flex-1 animate-fade-up">
           <span className="inline-block bg-orange-100 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-4">
             🔧 Rwanda&apos;s #1 Maintenance Platform

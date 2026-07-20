@@ -42,7 +42,7 @@ function VerificationCard() {
 export default function ForTechnicians() {
   return (
     <section id="for-technicians" className="py-24 bg-secondary">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 grid lg:grid-cols-2 gap-14 items-center">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 xl:px-32 grid lg:grid-cols-2 gap-14 items-center">
         <div>
           <span className="text-primary text-sm font-semibold uppercase tracking-widest">Join Our Network</span>
           <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">

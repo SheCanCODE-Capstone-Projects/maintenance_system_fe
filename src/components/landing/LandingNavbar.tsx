@@ -8,7 +8,7 @@ export default function LandingNavbar() {
   const [open, setOpen] = useState(false);
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 xl:px-32 h-16 flex items-center justify-between">
         <Link href="/" className="font-heading font-bold text-xl text-secondary hover:opacity-80 transition-opacity">
           Maintenance<span className="text-primary">Hub</span>
         </Link>
@@ -36,7 +36,7 @@ export default function LandingNavbar() {
         </button>
       </div>
       {open && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
+        <div className="md:hidden bg-white border-t border-gray-100 px-6 sm:px-12 py-4 flex flex-col gap-4">
           {links.map((l) => (
             <a key={l} href={`#${l.toLowerCase().replace(/\s+/g, "-")}`} className="text-sm font-medium text-gray-700 hover:text-primary" onClick={() => setOpen(false)}>
               {l}
