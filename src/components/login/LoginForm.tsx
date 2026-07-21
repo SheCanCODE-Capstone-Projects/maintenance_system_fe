@@ -7,7 +7,9 @@ import { z } from "zod";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Wrench } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import RoleSelector, { type Role } from "./RoleSelector";
+import { findLocalAccount } from "@/lib/localAuth";
 
 const schema = z.object({
   email: z.string().min(1, "Email is required").email("Enter a valid email address"),
@@ -19,17 +21,27 @@ type FormData = z.infer<typeof schema>;
 export default function LoginForm() {
   const [role, setRole] = useState<Role>("customer");
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = async (data: FormData) => {
-    // Auth submission handled by existing authService — placeholder for integration
-    void data;
-    void role;
+    const account = findLocalAccount(data.email, data.password);
+    if (!account) {
+      setError("root", { message: "Incorrect email or password. Please create an account first." });
+      return;
+    }
+    const dashboardRoute = {
+      customer: "/dashboard/customer",
+      technician: "/technician/dashboard",
+      company: "/company/dashboard",
+    }[account.role];
+    router.push(dashboardRoute);
   };
 
   return (
@@ -159,13 +171,14 @@ export default function LoginForm() {
             </>
           )}
         </motion.button>
+        {errors.root && <p role="alert" className="text-center text-sm text-red-500">{errors.root.message}</p>}
       </form>
 
       {/* Create account */}
       <p className="text-center text-sm text-gray-500 mt-6">
         Don&apos;t have an account?{" "}
         <Link
-          href="/register/customer"
+          href="/register"
           className="text-[#FF6224] font-semibold hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6224] rounded"
         >
           Create Account
