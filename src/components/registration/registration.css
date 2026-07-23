@@ -2,5 +2,5 @@
 }
 .reg-card{box-shadow:0 4px 16px #11223318}
 
-/* A more legible type scale for forms, while retaining the airy Figma layout. */
+/* Keep the registration forms readable while preserving the compact layout. */
 .reg-brand{font-size:13px}.reg-sidebar>p,.reg-field>span{font-size:10px}.reg-sidebar li{min-height:67px}.reg-sidebar li b{width:22px;height:22px;font-size:12px}.reg-sidebar li strong{font-size:13px}.reg-sidebar li small{font-size:11px}.reg-sidebar>a{font-size:12px}.reg-form-wrap{width:440px}.reg-form-wrap>h1{font-size:27px}.reg-form-wrap>p{font-size:14px}.reg-card{padding:22px}.reg-field{margin-bottom:14px}.reg-input-wrap input,.reg-field select{height:42px;font-size:13px;padding:0 12px}.reg-pills button{font-size:12px;padding:7px 13px}.reg-upload{height:92px}.reg-upload strong{font-size:12px;font-weight:500}.reg-upload small{font-size:10px}.reg-note{font-size:11px;line-height:17px;padding:11px}.reg-review>div{min-height:35px;font-size:12px}.reg-review b{font-size:12px}.reg-primary,.reg-secondary{min-height:42px;padding:0 19px;font-size:13px}.reg-login-copy{font-size:12px!important}.reg-success h1{font-size:23px}.reg-success>p{font-size:12px;line-height:19px}.reg-role-card h2{font-size:17px}.reg-role-card p{font-size:12px;line-height:18px}.reg-role-card ul{font-size:11px}.reg-role-card a{font-size:11px}.reg-role-card em,.reg-success em{font-size:10px}
