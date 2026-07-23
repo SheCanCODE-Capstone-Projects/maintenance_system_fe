@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, FormEvent, useMemo, useState } from "react";
 import "./registration.css";
 
 type Role = "customer" | "technician" | "company";
@@ -250,17 +250,27 @@ export default function RegistrationWizard({
   const config = roleCopy[role ?? "customer"];
   const router = useRouter();
   const [step, setStep] = useState(initialStep);
-  const [data, setData] = useState<Details>(initialData);
+  const [data, setData] = useState<Details>(() => {
+    if (!role || typeof window === "undefined") {
+      return initialData;
+    }
+
+    const saved = window.sessionStorage.getItem(`maintenance-hub-registration-${role}`);
+
+    if (!saved) {
+      return initialData;
+    }
+
+    try {
+      return { ...initialData, ...JSON.parse(saved) };
+    } catch {
+      return initialData;
+    }
+  });
   const [files, setFiles] = useState<Record<string, File | undefined>>({});
   const [error, setError] = useState("");
   const [complete, setComplete] = useState(false);
   const storageKey = role ? `maintenance-hub-registration-${role}` : "";
-
-  useEffect(() => {
-    if (!storageKey) return;
-    const saved = window.sessionStorage.getItem(storageKey);
-    if (saved) setData({ ...initialData, ...JSON.parse(saved) });
-  }, [storageKey]);
 
   const saveProgress = () => {
     if (storageKey) window.sessionStorage.setItem(storageKey, JSON.stringify(data));
