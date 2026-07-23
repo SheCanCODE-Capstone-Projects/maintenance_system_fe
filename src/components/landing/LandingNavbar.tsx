@@ -47,7 +47,7 @@ export default function LandingNavbar() {
             href="/register/customer"
             className="inline-flex items-center rounded-full bg-[#0D3330] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-[1.01]"
           >
-            Get Started
+            Start Now
           </Link>
         </div>
 
@@ -92,7 +92,7 @@ export default function LandingNavbar() {
               onClick={() => setOpen(false)}
               className="inline-flex items-center justify-center rounded-full bg-[#0D3330] px-4 py-2 text-sm font-semibold text-white"
             >
-              Get Started
+              Start Now
             </Link>
           </div>
         </div>
