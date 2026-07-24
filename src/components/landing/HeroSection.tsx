@@ -1,10 +1,5 @@
 import Link from "next/link";
-
-const stats = [
-  { value: "2400+", label: "Clients" },
-  { value: "890+", label: "Technicians" },
-  { value: "98%", label: "Resolved Jobs" },
-];
+import { getPublicLandingStats } from "@/lib/metrics";
 
 function ServiceCard() {
   return (
@@ -35,7 +30,9 @@ function ServiceCard() {
   );
 }
 
-export default function HeroSection() {
+export default async function HeroSection() {
+  const stats = await getPublicLandingStats();
+
   return (
     <section className="pt-28 pb-24 bg-bg" id="hero">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 xl:px-32 flex flex-col lg:flex-row items-center gap-16">
