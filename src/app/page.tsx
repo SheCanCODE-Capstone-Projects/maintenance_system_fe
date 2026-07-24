@@ -10,7 +10,7 @@ import LandingFooter from "@/components/landing/LandingFooter";
 
 export default function Home() {
   return (
-    <main className="scroll-smooth">
+    <main className="scroll-smooth bg-[#F4F6F5]">
       <LandingNavbar />
       <HeroSection />
       <HowItWorks />

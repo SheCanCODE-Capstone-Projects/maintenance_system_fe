@@ -1,1 +1,5 @@
-export default function EarningsPage() { return <section className="mx-auto max-w-4xl p-8"><h1 className="text-2xl font-bold">Earnings</h1><p className="mt-2 text-slate-600">Your earnings summary will appear here.</p></section>; }
+import TechnicianEarnings from "@/components/technician/TechnicianEarnings";
+
+export default function EarningsPage() {
+  return <main className="mx-auto max-w-7xl p-4 sm:p-6 md:p-10"><TechnicianEarnings /></main>;
+}

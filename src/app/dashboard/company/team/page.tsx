@@ -1,3 +1,3 @@
-import CompanyDashboardView from "@/components/company/CompanyDashboardView";
+import CompanyTeam from "@/components/company/CompanyTeam";
 
-export default function CompanyTeamPage() { return <CompanyDashboardView />; }
+export default function CompanyTeamPage() { return <CompanyTeam />; }

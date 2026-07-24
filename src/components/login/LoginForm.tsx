@@ -5,9 +5,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Wrench } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import BrandMark from "@/components/layout/BrandMark";
 import RoleSelector, { type Role } from "./RoleSelector";
 import { findLocalAccount } from "@/lib/localAuth";
 
@@ -18,10 +19,32 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+const roleLabels: Record<Role, string> = {
+  customer: "Customer",
+  technician: "Technician",
+  company: "Company",
+  admin: "Admin",
+};
+
+const roleDescriptions: Record<Role, string> = {
+  customer: "Track requests, approvals, and completed jobs.",
+  technician: "Open your job queue and manage assignments.",
+  company: "Review team activity, analytics, and company settings.",
+  admin: "Manage platform access and oversight tools.",
+};
+
+function getRegisterHref(role: Role) {
+  if (role === "technician") return "/register/technician";
+  if (role === "company") return "/register/company";
+  if (role === "admin") return "/register/admin";
+  return "/register/customer";
+}
+
 export default function LoginForm() {
   const router = useRouter();
   const [role, setRole] = useState<Role>("customer");
   const [showPassword, setShowPassword] = useState(false);
+  const selectedRoleLabel = roleLabels[role];
 
   const {
     register,
@@ -36,6 +59,10 @@ export default function LoginForm() {
       setError("root", { message: "Incorrect email or password. Please create an account first." });
       return;
     }
+    if (account.role !== role) {
+      setError("root", { message: `This is a ${account.role} account. Select ${roleLabels[account.role]} before signing in.` });
+      return;
+    }
     const dashboardRoute = {
       admin: "/dashboard/admin",
       customer: "/dashboard/customer",
@@ -43,6 +70,11 @@ export default function LoginForm() {
       company: "/dashboard/company",
     }[account.role];
     router.push(dashboardRoute);
+/* Placeholder remote authentication hook retained for future API integration.
+    // Auth submission handled by existing authService — placeholder for integration
+    void data;
+    void role;
+*/
   };
 
   return (
@@ -54,9 +86,7 @@ export default function LoginForm() {
     >
       {/* Mobile logo */}
       <div className="flex lg:hidden items-center gap-2 mb-8">
-        <div className="w-8 h-8 rounded-lg bg-[#FF6224] flex items-center justify-center">
-          <Wrench className="w-4 h-4 text-white" />
-        </div>
+        <BrandMark size={32} />
         <span className="font-heading font-bold text-lg text-[#0D3330]">
           Maintenance<span className="text-[#FF6224]">Hub</span>
         </span>
@@ -65,13 +95,16 @@ export default function LoginForm() {
       {/* Heading */}
       <div className="mb-7">
         <h2 className="font-heading text-2xl xl:text-3xl font-extrabold text-[#0D3330]">Welcome back</h2>
-        <p className="text-gray-500 text-sm mt-1">Sign in to your Maintenance Hub account</p>
+        <p className="text-gray-500 text-sm mt-1">Sign in to your {selectedRoleLabel.toLowerCase()} account</p>
       </div>
 
       {/* Role selector */}
       <div className="mb-6">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Sign in as</p>
         <RoleSelector selected={role} onChange={setRole} />
+        <p className="mt-3 text-xs leading-5 text-gray-500">
+          {roleDescriptions[role]}
+        </p>
       </div>
 
       {/* Form */}
@@ -167,7 +200,7 @@ export default function LoginForm() {
             <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
           ) : (
             <>
-              Sign In
+              Sign in as {selectedRoleLabel}
               <ArrowRight className="w-4 h-4" />
             </>
           )}
@@ -179,10 +212,10 @@ export default function LoginForm() {
       <p className="text-center text-sm text-gray-500 mt-6">
         Don&apos;t have an account?{" "}
         <Link
-          href="/register"
+          href={getRegisterHref(role)}
           className="text-[#FF6224] font-semibold hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6224] rounded"
         >
-          Create Account
+          Create {selectedRoleLabel} account
         </Link>
       </p>
     </motion.div>
