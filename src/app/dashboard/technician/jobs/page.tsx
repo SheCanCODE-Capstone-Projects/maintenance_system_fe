@@ -1,21 +1,297 @@
-<<<<<<< Updated upstream
-import RequestCard from "@/components/requests/RequestCard";
-const job = { id: "job-1", title: "Repair kitchen faucet", description: "Customer has reported a leaking faucet.", status: "In Progress" as const, createdAt: new Date().toISOString() };
-export default function JobsPage() { return <section className="mx-auto max-w-4xl p-8"><h1 className="mb-6 text-2xl font-bold">My jobs</h1><RequestCard request={job} /></section>; }
-=======
 "use client";
-import { Check, CheckCircle2, ChevronLeft, ChevronRight, MapPin, Phone } from "lucide-react";
+
+import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo, useState } from "react";
-type Status = "New" | "Accepted" | "In progress" | "Awaiting review" | "Completed" | "Declined";
-const jobs = [
-  { id: 1, initials: "DU", name: "Delice Uwase", location: "Gasabo, Kimihurura", date: "Jul 16, 2025", description: "Kitchen sink leaking under the pipes. Water pooling under the cabinet for 3 days.", phone: "+250 788 000 001", status: "In progress" as Status, urgent: true },
-  { id: 2, initials: "EH", name: "Emmanuel Habimana", location: "Kicukiro, Niboye", date: "Jul 16, 2025", description: "Bathroom toilet constantly running and overflowing.", phone: "+250 788 000 002", status: "New" as Status, urgent: true },
-  { id: 3, initials: "AM", name: "Aline Mukamana", location: "Gasabo, Remera", date: "Jul 14, 2025", description: "Replace a faulty shower mixer and inspect low water pressure.", phone: "+250 788 000 003", status: "Accepted" as Status, urgent: false },
-  { id: 4, initials: "JM", name: "Jean Mugabo", location: "Nyarugenge, Nyamirambo", date: "Jul 10, 2025", description: "Water heater is not heating consistently.", phone: "+250 788 000 004", status: "Awaiting review" as Status, urgent: false },
-  { id: 5, initials: "CM", name: "Chantal Mutesi", location: "Kicukiro, Kagarama", date: "Jul 06, 2025", description: "Fix a dripping outdoor tap.", phone: "+250 788 000 005", status: "Completed" as Status, urgent: false },
-  { id: 6, initials: "PK", name: "Patrick Kwizera", location: "Gasabo, Gisozi", date: "Jul 02, 2025", description: "Inspect and repair a leaking kitchen drain.", phone: "+250 788 000 006", status: "Completed" as Status, urgent: false },
+import JobCard from "@/components/technician/JobCard";
+import JobFilterTabs from "@/components/technician/JobFilterTabs";
+import type { TechnicianJob, JobStatus, Priority } from "@/types/technicianJob";
+
+// Mock data for immediate rendering
+const mockJobs: TechnicianJob[] = [
+  {
+    id: "job-1",
+    title: "Repair kitchen faucet",
+    customerName: "Delice Uwase",
+    category: "Plumbing",
+    dateTime: "Jul 16, 2025 - 10:00 AM",
+    location: "Gasabo, Kimihurura",
+    priority: "Urgent",
+    status: "Pending",
+    description: "Customer has reported a leaking faucet that needs immediate attention.",
+    phone: "+250 788 000 001",
+  },
+  {
+    id: "job-2",
+    title: "Fix bathroom toilet",
+    customerName: "Emmanuel Habimana",
+    category: "Plumbing",
+    dateTime: "Jul 16, 2025 - 2:30 PM",
+    location: "Kicukiro, Niboye",
+    priority: "High",
+    status: "In Progress",
+    description: "Toilet constantly running and overflowing. Need to replace flapper valve.",
+    phone: "+250 788 000 002",
+  },
+  {
+    id: "job-3",
+    title: "Replace shower mixer",
+    customerName: "Aline Mukamana",
+    category: "Plumbing",
+    dateTime: "Jul 14, 2025 - 9:00 AM",
+    location: "Gasabo, Remera",
+    priority: "Medium",
+    status: "Pending",
+    description: "Replace a faulty shower mixer and inspect low water pressure.",
+    phone: "+250 788 000 003",
+  },
+  {
+    id: "job-4",
+    title: "Water heater repair",
+    customerName: "Jean Mugabo",
+    category: "Electrical",
+    dateTime: "Jul 10, 2025 - 11:00 AM",
+    location: "Nyarugenge, Nyamirambo",
+    priority: "Low",
+    status: "Completed",
+    description: "Water heater is not heating consistently. Issue resolved.",
+    phone: "+250 788 000 004",
+  },
+  {
+    id: "job-5",
+    title: "Fix outdoor tap",
+    customerName: "Chantal Mutesi",
+    category: "Plumbing",
+    dateTime: "Jul 06, 2025 - 3:00 PM",
+    location: "Kicukiro, Kagarama",
+    priority: "Low",
+    status: "Completed",
+    description: "Fix a dripping outdoor tap.",
+    phone: "+250 788 000 005",
+  },
+  {
+    id: "job-6",
+    title: "Kitchen drain inspection",
+    customerName: "Patrick Kwizera",
+    category: "Plumbing",
+    dateTime: "Jul 02, 2025 - 8:00 AM",
+    location: "Gasabo, Gisozi",
+    priority: "Medium",
+    status: "In Progress",
+    description: "Inspect and repair a leaking kitchen drain.",
+    phone: "+250 788 000 006",
+  },
+  {
+    id: "job-7",
+    title: "Electrical outlet installation",
+    customerName: "Marie Claire",
+    category: "Electrical",
+    dateTime: "Jun 28, 2025 - 1:00 PM",
+    location: "Gasabo, Kacyiru",
+    priority: "High",
+    status: "Pending",
+    description: "Install new electrical outlet in living room.",
+    phone: "+250 788 000 007",
+  },
+  {
+    id: "job-8",
+    title: "AC unit servicing",
+    customerName: "Eric Nshimiyimana",
+    category: "HVAC",
+    dateTime: "Jun 25, 2025 - 10:30 AM",
+    location: "Kicukiro, Kicukiro",
+    priority: "Low",
+    status: "Completed",
+    description: "Serviced air conditioning unit and cleaned filters.",
+    phone: "+250 788 000 008",
+  },
 ];
-const filters: Array<Status | "All"> = ["All", "New", "Accepted", "In progress", "Awaiting review", "Completed"];
-export default function JobsPage() { const [allJobs, setAllJobs] = useState(jobs); const [filter, setFilter] = useState<Status | "All">("All"); const [page, setPage] = useState(1); const size = 4; const filtered = useMemo(() => filter === "All" ? allJobs.filter(j => j.status !== "Declined") : allJobs.filter(j => j.status === filter), [allJobs, filter]); const pages = Math.max(1, Math.ceil(filtered.length / size)); const visible = filtered.slice((page - 1) * size, page * size); const update = (id: number, status: Status) => setAllJobs(list => list.map(j => j.id === id ? { ...j, status } : j)); return <main className="mx-auto max-w-[1600px] p-4 sm:p-6 md:p-10"><h1 className="text-2xl font-bold text-slate-950 sm:text-3xl">My Jobs</h1><p className="mt-1 text-sm text-slate-500 sm:text-base">Incoming and active maintenance requests</p><div className="mt-7 overflow-x-auto pb-2"><div className="flex min-w-max gap-3">{filters.map(item => { const count = item === "All" ? allJobs.filter(j => j.status !== "Declined").length : allJobs.filter(j => j.status === item).length; return <button key={item} onClick={() => { setFilter(item); setPage(1); }} className={`rounded-full border px-4 py-2.5 text-sm font-medium sm:px-5 sm:text-base ${filter === item ? "border-primary bg-orange-50 text-primary" : "border-slate-200 bg-white text-slate-500"}`}>{item}{count > 0 && <span className={`ml-2 rounded-full px-2 py-0.5 text-xs font-bold ${filter === item ? "bg-primary text-white" : "bg-slate-100"}`}>{count}</span>}</button>; })}</div></div><div className="mt-5 space-y-4 sm:mt-7">{visible.map(job => <JobCard key={job.id} job={job} update={update} />)}{!visible.length && <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">No jobs in this category.</div>}</div>{filtered.length > size && <div className="mt-6 flex flex-col gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between"><span>Showing {(page - 1) * size + 1}-{Math.min(page * size, filtered.length)} of {filtered.length} jobs</span><div className="flex self-end gap-2"><button disabled={page === 1} onClick={() => setPage(page - 1)} className="rounded-lg border p-2 disabled:opacity-40"><ChevronLeft size={17} /></button><button disabled={page === pages} onClick={() => setPage(page + 1)} className="rounded-lg border p-2 disabled:opacity-40"><ChevronRight size={17} /></button></div></div>}</main>; }
-function JobCard({ job, update }: { job: typeof jobs[number]; update: (id: number, status: Status) => void }) { const color = job.status === "New" ? "bg-amber-100 text-amber-700" : job.status === "Completed" ? "bg-emerald-100 text-emerald-700" : "bg-blue-50 text-blue-700"; return <article className="rounded-2xl border border-red-300 bg-white p-4 shadow-sm sm:p-7"><div className="flex flex-col gap-5 lg:flex-row lg:justify-between"><div className="flex min-w-0 gap-3"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-red-100 text-sm font-bold text-red-500">{job.initials}</span><div className="min-w-0"><h2 className="break-words font-bold">{job.name}</h2><p className="flex items-center gap-1 text-sm text-slate-500"><MapPin size={13} className="shrink-0" />{job.location}</p></div></div><div className="flex flex-wrap gap-2"><span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-500">{job.urgent ? "URGENT" : "STANDARD"}</span><span className={`rounded-full px-3 py-1 text-xs font-bold ${color}`}>{job.status}</span></div></div><div className="mt-5 flex flex-wrap gap-3 text-sm"><span className="rounded-md bg-slate-100 px-3 py-1.5 font-semibold">Plumbing</span><span className="text-slate-500">{job.date}</span></div><p className="mt-4 text-slate-700">{job.description}</p><a href={`tel:${job.phone.replace(/\s/g, "")}`} className="mt-5 flex items-center gap-3 break-all rounded-xl bg-slate-100 px-4 py-3"><Phone size={16} className="shrink-0" />{job.phone}</a><div className="mt-4 flex flex-wrap justify-end gap-3">{job.status === "New" && <><button onClick={() => update(job.id, "Declined")} className="flex flex-1 justify-center rounded-lg border px-5 py-3 font-semibold text-red-500 sm:flex-none">Reject</button><button onClick={() => update(job.id, "In progress")} className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-emerald-700 px-5 py-3 font-semibold text-white sm:flex-none"><Check size={17} />Accept</button></>}{(job.status === "In progress" || job.status === "Accepted") && <button onClick={() => update(job.id, "Completed")} className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-semibold text-white sm:w-auto"><CheckCircle2 size={17} />Mark complete</button>}</div></article>; }
->>>>>>> Stashed changes
+
+type SortOption = "newest" | "oldest" | "priority-high" | "priority-low";
+
+export default function TechnicianJobsPage() {
+  const [jobs, setJobs] = useState<TechnicianJob[]>(mockJobs);
+  const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortOption, setSortOption] = useState<SortOption>("newest");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 6;
+
+  // Filter jobs based on status and search query
+  const filteredJobs = useMemo(() => {
+    let result = jobs;
+
+    // Status filter
+    if (activeFilter !== "all") {
+      result = result.filter((job) => job.status === activeFilter);
+    }
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (job) =>
+          job.title.toLowerCase().includes(query) ||
+          job.customerName.toLowerCase().includes(query) ||
+          job.location.toLowerCase().includes(query)
+      );
+    }
+
+    // Sort
+    result = [...result].sort((a, b) => {
+      if (sortOption === "newest") {
+        return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
+      }
+      if (sortOption === "oldest") {
+        return new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime();
+      }
+      if (sortOption === "priority-high") {
+        const priorityOrder: Priority[] = ["Urgent", "High", "Medium", "Low"];
+        return (
+          priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority)
+        );
+      }
+      if (sortOption === "priority-low") {
+        const priorityOrder: Priority[] = ["Low", "Medium", "High", "Urgent"];
+        return (
+          priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority)
+        );
+      }
+      return 0;
+    });
+
+    return result;
+  }, [jobs, activeFilter, searchQuery, sortOption]);
+
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filteredJobs.length / itemsPerPage));
+  const paginatedJobs = filteredJobs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Handlers
+  const handleStartJob = (id: string) => {
+    setJobs((prev) =>
+      prev.map((job) =>
+        job.id === id ? { ...job, status: "In Progress" as JobStatus } : job
+      )
+    );
+  };
+
+  const handleComplete = (id: string) => {
+    setJobs((prev) =>
+      prev.map((job) =>
+        job.id === id ? { ...job, status: "Completed" as JobStatus } : job
+      )
+    );
+  };
+
+  const handleViewDetails = (id: string) => {
+    // In a real app, this would navigate to a details page
+    console.log("View details for job:", id);
+  };
+
+  return (
+    <main className="mx-auto max-w-[1600px] p-4 sm:p-6 md:p-10">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-slate-950 sm:text-3xl">My Jobs</h1>
+        <p className="mt-1 text-sm text-slate-500 sm:text-base">
+          Manage your assigned maintenance requests
+        </p>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="mb-4 overflow-x-auto pb-2">
+        <JobFilterTabs
+          jobs={jobs}
+          activeFilter={activeFilter}
+          onFilterChange={(filter) => {
+            setActiveFilter(filter);
+            setCurrentPage(1);
+          }}
+        />
+      </div>
+
+      {/* Search and Sort Bar */}
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative flex-1 max-w-md">
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          />
+          <input
+            type="text"
+            placeholder="Search by job title, customer, or location..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full rounded-lg border border-slate-200 bg-white pl-10 pr-4 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Filter size={16} className="text-slate-500" />
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value as SortOption)}
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="newest">Date: Newest to Oldest</option>
+            <option value="oldest">Date: Oldest to Newest</option>
+            <option value="priority-high">Priority: High to Low</option>
+            <option value="priority-low">Priority: Low to High</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Job Cards Grid */}
+      <div className="space-y-4">
+        {paginatedJobs.length > 0 ? (
+          paginatedJobs.map((job) => (
+            <JobCard
+              key={job.id}
+              job={job}
+              onStartJob={handleStartJob}
+              onComplete={handleComplete}
+              onViewDetails={handleViewDetails}
+            />
+          ))
+        ) : (
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center">
+            <p className="text-slate-500">No jobs found for this filter.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Pagination */}
+      {filteredJobs.length > itemsPerPage && (
+        <div className="mt-6 flex flex-col gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <span>
+            Showing {(currentPage - 1) * itemsPerPage + 1}-
+            {Math.min(currentPage * itemsPerPage, filteredJobs.length)} of{" "}
+            {filteredJobs.length} jobs
+          </span>
+          <div className="flex gap-2">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+              className="rounded-lg border p-2 disabled:opacity-40 hover:bg-slate-50"
+            >
+              <ChevronLeft size={17} />
+            </button>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(currentPage + 1)}
+              className="rounded-lg border p-2 disabled:opacity-40 hover:bg-slate-50"
+            >
+              <ChevronRight size={17} />
+            </button>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}
