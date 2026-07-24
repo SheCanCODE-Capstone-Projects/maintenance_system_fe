@@ -1,5 +1,3 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function CustomerDashboardPage() {
-  return <main className="p-8"><h1 className="text-2xl font-bold">Customer dashboard</h1><p className="mt-2">Your dashboard is ready for your team to expand.</p><Link className="mt-4 inline-block underline" href="/login">Back to login</Link></main>;
-}
+export default function CustomerDashboardPage() { redirect("/dashboard/customer"); }

@@ -1,0 +1,5 @@
+import Link from "next/link";
+
+export default function ForgotPasswordPage() {
+  return <main className="grid min-h-screen place-items-center bg-[#f4f6f5] p-6"><section className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-7 shadow-sm"><h1 className="font-heading text-2xl font-extrabold text-[#0D3330]">Reset your password</h1><p className="mt-2 text-sm text-slate-500">Enter your email address and we’ll send password-reset instructions.</p><form className="mt-6 space-y-4"><label className="block text-sm font-medium text-slate-700">Email address<input type="email" autoComplete="email" required placeholder="you@example.com" className="mt-1.5 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-[#FF6224] focus:ring-2 focus:ring-[#FF6224]/20" /></label><button type="submit" className="w-full rounded-xl bg-[#FF6224] py-3 text-sm font-semibold text-white hover:bg-orange-600">Send reset link</button></form><Link href="/login" className="mt-5 block text-center text-sm font-semibold text-[#FF6224] hover:underline">Back to sign in</Link></section></main>;
+}

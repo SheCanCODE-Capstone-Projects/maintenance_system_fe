@@ -1,4 +1,4 @@
-export type AccountRole = "customer" | "technician" | "company";
+export type AccountRole = "admin" | "customer" | "technician" | "company";
 
 export type LocalAccount = {
   email: string;
@@ -8,6 +8,13 @@ export type LocalAccount = {
 };
 
 const accountsKey = "maintenance-hub-accounts";
+
+const adminAccount: LocalAccount = {
+  email: "admin@gmail.com",
+  password: "Admin123",
+  role: "admin",
+  name: "Administrator",
+};
 
 function getAccounts(): LocalAccount[] {
   try {
@@ -23,5 +30,12 @@ export function saveLocalAccount(account: LocalAccount) {
 }
 
 export function findLocalAccount(email: string, password: string) {
+  if (
+    email.toLowerCase() === adminAccount.email &&
+    password === adminAccount.password
+  ) {
+    return adminAccount;
+  }
+
   return getAccounts().find(account => account.email.toLowerCase() === email.toLowerCase() && account.password === password);
 }

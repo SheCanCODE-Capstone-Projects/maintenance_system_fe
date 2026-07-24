@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Wrench } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import RoleSelector, { type Role } from "./RoleSelector";
 import { findLocalAccount } from "@/lib/localAuth";
 
@@ -23,7 +22,6 @@ export default function LoginForm() {
   const router = useRouter();
   const [role, setRole] = useState<Role>("customer");
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
 
   const {
     register,
@@ -39,9 +37,10 @@ export default function LoginForm() {
       return;
     }
     const dashboardRoute = {
+      admin: "/dashboard/admin",
       customer: "/dashboard/customer",
-      technician: "/technician/dashboard",
-      company: "/company/dashboard",
+      technician: "/dashboard/technician",
+      company: "/dashboard/company",
     }[account.role];
     router.push(dashboardRoute);
   };
