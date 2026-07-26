@@ -309,6 +309,7 @@ export default function RegistrationWizard({
       email: data.email,
       password: data.password,
       role,
+      approvalStatus: role === "customer" ? "approved" : "pending",
     });
     if (storageKey) window.sessionStorage.removeItem(storageKey);
     setComplete(true);

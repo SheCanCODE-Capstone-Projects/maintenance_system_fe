@@ -1,12 +1,13 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { getPublicLandingStats } from "@/lib/metrics";
 
 function ServiceCard() {
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-5 w-72 animate-fade-up">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-xs font-semibold text-muted uppercase tracking-wide">Service Request</span>
-        <span className="bg-green-100 text-accent text-xs font-semibold px-2 py-0.5 rounded-full">#TK-00421</span>
+    <div className="hero-service-card w-72 rounded-2xl border border-white/70 bg-white/95 p-5 shadow-2xl shadow-[#062a27]/25 backdrop-blur">
+      <div className="mb-4 flex items-center justify-between">
+        <span className="text-xs font-semibold uppercase tracking-wide text-muted">Service Request</span>
+        <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-accent">#TK-00421</span>
       </div>
       <div className="space-y-3 text-sm">
         {[
@@ -16,16 +17,16 @@ function ServiceCard() {
           ["Est. Arrival", "Today, 2:30 PM"],
           ["Location", "Kigali, Gasabo"],
         ].map(([label, value, extra]) => (
-          <div key={label} className="flex justify-between">
+          <div key={label} className="flex justify-between gap-3">
             <span className="text-muted">{label}</span>
-            <span className={`font-medium text-gray-800 ${extra ?? ""}`}>{value}</span>
+            <span className={`text-right font-medium text-gray-800 ${extra ?? ""}`}>{value}</span>
           </div>
         ))}
       </div>
-      <div className="mt-4 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-        <div className="h-full w-3/5 bg-primary rounded-full" />
+      <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-gray-100">
+        <div className="h-full w-3/5 rounded-full bg-primary" />
       </div>
-      <p className="text-xs text-muted mt-1">60% complete</p>
+      <p className="mt-1 text-xs text-muted">60% complete</p>
     </div>
   );
 }
@@ -34,28 +35,36 @@ export default async function HeroSection() {
   const stats = await getPublicLandingStats();
 
   return (
-    <section className="pt-28 pb-24 bg-bg" id="hero">
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 xl:px-32 flex flex-col lg:flex-row items-center gap-16">
-        <div className="flex-1 animate-fade-up">
-          <span className="inline-block bg-orange-100 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-4">
-            🔧 Rwanda&apos;s #1 Maintenance Platform
+    <section className="relative isolate overflow-hidden bg-[#092c29] py-24 sm:py-28 lg:min-h-[680px] lg:py-32" id="hero">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-20 bg-cover bg-[position:62%_center] lg:bg-center"
+        style={{ backgroundImage: "url('/maintenance-hero.jpg')" }}
+      />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-[#f4f6f5]/[.98] via-[#f4f6f5]/90 to-[#0d3330]/55" />
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-16 px-6 sm:px-12 lg:flex-row lg:px-24 xl:px-32">
+        <div className="flex-1">
+          <span className="hero-badge mb-5 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50/90 px-3.5 py-1.5 text-xs font-bold text-primary shadow-sm">
+            <span aria-hidden="true">🔧</span> Rwanda&apos;s #1 Maintenance Platform
           </span>
-          <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-secondary leading-tight mb-6">
-            Your maintenance,<br />
-            <span className="text-primary">managed smarter.</span>
+          <h1 className="mb-6 font-heading text-4xl font-extrabold leading-[1.08] tracking-tight text-secondary sm:text-5xl lg:text-6xl">
+            <span className="hero-title-word" style={{ "--hero-delay": "150ms" } as CSSProperties}>Your</span>{" "}
+            <span className="hero-title-word" style={{ "--hero-delay": "450ms" } as CSSProperties}>maintenance,</span><br />
+            <span className="hero-title-word text-primary" style={{ "--hero-delay": "750ms" } as CSSProperties}>managed</span>{" "}
+            <span className="hero-title-word text-primary" style={{ "--hero-delay": "1050ms" } as CSSProperties}>smarter.</span>
           </h1>
-          <p className="text-gray-500 text-lg mb-8 max-w-lg">
+          <p className="hero-copy mb-8 max-w-lg text-lg leading-8 text-slate-600">
             Connect customers with verified maintenance professionals across Rwanda. Fast, reliable, and transparent.
           </p>
-          <div className="flex flex-wrap gap-4">
-            <Link href="/register/customer" className="bg-primary text-white font-semibold px-7 py-3 rounded-full hover:bg-orange-600 transition-colors shadow-lg shadow-orange-200">
+          <div className="hero-actions flex flex-wrap gap-4">
+            <Link href="/register/customer" className="rounded-full bg-primary px-7 py-3 font-semibold text-white shadow-lg shadow-orange-200 transition-all hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-xl">
               Get Started Free
             </Link>
-            <a href="#categories" className="border-2 border-secondary text-secondary font-semibold px-7 py-3 rounded-full hover:bg-secondary hover:text-white transition-colors">
+            <a href="#categories" className="rounded-full border-2 border-secondary bg-white/40 px-7 py-3 font-semibold text-secondary backdrop-blur-sm transition-colors hover:bg-secondary hover:text-white">
               Browse Technicians
             </a>
           </div>
-          <div className="mt-12 flex gap-10">
+          <div className="hero-stats mt-12 flex flex-wrap gap-x-10 gap-y-5 border-t border-[#0d3330]/15 pt-6">
             {stats.map(({ value, label }) => (
               <div key={label}>
                 <p className="font-heading text-3xl font-extrabold text-secondary">{value}</p>
@@ -64,9 +73,12 @@ export default async function HeroSection() {
             ))}
           </div>
         </div>
-        <div className="flex-1 flex justify-center lg:justify-end">
-          <div className="relative">
-            <div className="w-80 h-80 bg-gradient-to-br from-secondary to-accent rounded-3xl opacity-10 absolute -top-6 -left-6" />
+        <div className="flex flex-1 justify-center lg:justify-end">
+          <div className="relative mt-3">
+            <div aria-hidden="true" className="absolute -left-7 -top-7 h-80 w-80 rounded-3xl bg-gradient-to-br from-white/40 to-[#ff6224]/35" />
+            <div className="absolute -right-5 -bottom-5 z-10 rounded-xl bg-[#0d3330] px-4 py-3 text-xs font-semibold text-white shadow-xl">
+              <span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-[#6ee7b7]" /> Live job tracking
+            </div>
             <ServiceCard />
           </div>
         </div>

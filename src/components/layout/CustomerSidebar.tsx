@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ClipboardList, History, LayoutDashboard, LogOut, Search, Settings, Wrench } from "lucide-react";
+import { ClipboardList, History, LayoutDashboard, LogOut, MessageCircle, Search, Settings, Wrench } from "lucide-react";
 
 const links = [
   { label: "Dashboard", href: "/dashboard/customer", icon: LayoutDashboard },
   { label: "My Requests", href: "/dashboard/customer/requests", icon: ClipboardList },
   { label: "Find Technicians", href: "/dashboard/customer/technicians", icon: Search },
   { label: "History", href: "/dashboard/customer/history", icon: History },
+  { label: "Messages", href: "/messages", icon: MessageCircle },
   { label: "Settings", href: "/dashboard/customer/settings", icon: Settings },
 ];
 

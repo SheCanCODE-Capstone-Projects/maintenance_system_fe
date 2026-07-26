@@ -5,6 +5,7 @@ export type LocalAccount = {
   password: string;
   role: AccountRole;
   name: string;
+  approvalStatus?: "pending" | "approved" | "rejected";
 };
 
 const accountsKey = "maintenance-hub-accounts";
@@ -22,6 +23,13 @@ function getAccounts(): LocalAccount[] {
   } catch {
     return [];
   }
+}
+
+export function getLocalAccounts() { return getAccounts(); }
+
+export function setAccountApproval(email: string, approvalStatus: NonNullable<LocalAccount["approvalStatus"]>) {
+  const accounts = getAccounts().map((account) => account.email.toLowerCase() === email.toLowerCase() ? { ...account, approvalStatus } : account);
+  window.localStorage.setItem(accountsKey, JSON.stringify(accounts));
 }
 
 export function saveLocalAccount(account: LocalAccount) {

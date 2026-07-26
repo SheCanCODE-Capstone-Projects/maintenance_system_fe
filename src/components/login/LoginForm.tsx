@@ -63,6 +63,10 @@ export default function LoginForm() {
       setError("root", { message: `This is a ${account.role} account. Select ${roleLabels[account.role]} before signing in.` });
       return;
     }
+    if ((account.role === "technician" || account.role === "company") && account.approvalStatus !== "approved") {
+      setError("root", { message: account.approvalStatus === "rejected" ? "This account was not approved. Please contact support." : "Your account is waiting for admin approval." });
+      return;
+    }
     const dashboardRoute = {
       admin: "/dashboard/admin",
       customer: "/dashboard/customer",

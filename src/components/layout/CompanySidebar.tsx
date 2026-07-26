@@ -7,6 +7,7 @@ import {
   ClipboardList,
   LayoutDashboard,
   LogOut,
+  MessageCircle,
   Settings,
   Star,
   Users,
@@ -31,6 +32,7 @@ const navItems: NavItem[] = [
   { label: "Job Requests", href: "/dashboard/company/jobs", icon: ClipboardList },
   { label: "Analytics", href: "/dashboard/company/analytics", icon: BarChart3 },
   { label: "Reviews", href: "/dashboard/company/reviews", icon: Star },
+  { label: "Messages", href: "/messages", icon: MessageCircle },
   { label: "Settings", href: "/dashboard/company/settings", icon: Settings },
 ];
 

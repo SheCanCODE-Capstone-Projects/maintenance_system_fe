@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, ClipboardList, Grid2X2, LogOut, Settings, Star, Wrench } from "lucide-react";
+import { BarChart3, ClipboardList, Grid2X2, LogOut, MessageCircle, Settings, Star, Wrench } from "lucide-react";
 
 const links = [
   { label: "Dashboard", href: "/dashboard/technician", icon: Grid2X2 },
   { label: "My Jobs", href: "/dashboard/technician/jobs", icon: ClipboardList },
   { label: "Reviews", href: "/dashboard/technician/reviews", icon: Star },
+  { label: "Messages", href: "/messages", icon: MessageCircle },
   { label: "Earnings", href: "/dashboard/technician/earnings", icon: BarChart3 },
   { label: "Settings", href: "/dashboard/technician/settings", icon: Settings },
 ] as const;
