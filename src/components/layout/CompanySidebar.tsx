@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import BrandMark from "./BrandMark";
+import { useSignOut } from "@/hooks/useSignOut";
 
 type CompanySidebarProps = {
   companyName?: string;
@@ -46,6 +47,7 @@ export default function CompanySidebar({
   onSignOut,
 }: CompanySidebarProps) {
   const pathname = usePathname();
+  const defaultSignOut = useSignOut();
 
   return (
     <aside
@@ -116,7 +118,7 @@ export default function CompanySidebar({
           type="button"
           title="Sign out"
           aria-label="Sign out"
-          onClick={onSignOut}
+          onClick={onSignOut ?? defaultSignOut}
           className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-[14px] font-medium text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6224] focus-visible:ring-offset-2 focus-visible:ring-offset-[#062A27] lg:justify-start"
         >
           <LogOut aria-hidden className="h-4 w-4" />

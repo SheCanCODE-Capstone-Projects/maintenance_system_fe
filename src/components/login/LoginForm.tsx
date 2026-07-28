@@ -36,7 +36,7 @@ const roleDescriptions: Record<Role, string> = {
 function getRegisterHref(role: Role) {
   if (role === "technician") return "/register/technician";
   if (role === "company") return "/register/company";
-  if (role === "admin") return "/register/admin";
+  if (role === "admin") return "/login";
   return "/register/customer";
 }
 
@@ -213,7 +213,7 @@ export default function LoginForm() {
       </form>
 
       {/* Create account */}
-      <p className="text-center text-sm text-gray-500 mt-6">
+      {role !== "admin" && <p className="text-center text-sm text-gray-500 mt-6">
         Don&apos;t have an account?{" "}
         <Link
           href={getRegisterHref(role)}
@@ -221,7 +221,8 @@ export default function LoginForm() {
         >
           Create {selectedRoleLabel} account
         </Link>
-      </p>
+      </p>}
+      {role === "admin" && <p className="mt-6 text-center text-sm text-gray-500">Administrator accounts are created by the platform owner. Use your assigned sign-in details.</p>}
     </motion.div>
   );
 }

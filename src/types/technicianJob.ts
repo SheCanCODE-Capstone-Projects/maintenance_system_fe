@@ -12,4 +12,6 @@ export interface TechnicianJob {
   status: JobStatus;
   description?: string;
   phone?: string;
+  photoName?: string;
+  photoDataUrl?: string;
 }

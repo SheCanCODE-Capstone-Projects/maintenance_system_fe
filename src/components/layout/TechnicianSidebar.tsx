@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChart3, ClipboardList, Grid2X2, LogOut, MessageCircle, Settings, Star, Wrench } from "lucide-react";
+import { useSignOut } from "@/hooks/useSignOut";
 
 const links = [
   { label: "Dashboard", href: "/dashboard/technician", icon: Grid2X2 },
@@ -15,6 +16,7 @@ const links = [
 
 export default function TechnicianSidebar() {
   const pathname = usePathname();
+  const signOut = useSignOut();
 
   return (
     <aside className="flex w-full shrink-0 flex-col bg-[#083d38] text-white md:min-h-screen md:w-[290px]">
@@ -58,7 +60,7 @@ export default function TechnicianSidebar() {
             <p className="text-sm text-slate-400">Technician</p>
           </div>
         </div>
-        <button className="mt-5 flex items-center gap-2 text-sm text-slate-400 transition hover:text-white">
+        <button onClick={signOut} className="mt-5 flex items-center gap-2 text-sm text-slate-400 transition hover:text-white">
           <LogOut size={17} />
           Sign out
         </button>

@@ -8,6 +8,7 @@ export type CustomerRequest = {
   location: string;
   priority: RequestPriority;
   photoName?: string;
+  photoDataUrl?: string;
   technicianName: string;
   technicianArea: string;
   status: RequestStatus;

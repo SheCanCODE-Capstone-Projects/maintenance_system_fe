@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useMemo, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { saveLocalAccount } from "@/lib/localAuth";
 import "./registration.css";
 
 type Role = "customer" | "technician" | "company";
 type Details = Record<string, string>;
+type StoredDocument = { name: string; type: string; dataUrl: string };
 
 const roleCopy = {
   customer: {
@@ -185,7 +186,7 @@ function Upload({
   required = false,
 }: {
   label: string;
-  file?: File;
+  file?: StoredDocument;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
 }) {
@@ -268,13 +269,28 @@ export default function RegistrationWizard({
       return initialData;
     }
   });
-  const [files, setFiles] = useState<Record<string, File | undefined>>({});
+  const [files, setFiles] = useState<Record<string, StoredDocument | undefined>>({});
   const [error, setError] = useState("");
   const [complete, setComplete] = useState(false);
   const storageKey = role ? `maintenance-hub-registration-${role}` : "";
+  const documentsKey = role ? `maintenance-hub-registration-documents-${role}` : "";
+
+  useEffect(() => {
+    if (!documentsKey) return;
+    try { setFiles(JSON.parse(window.sessionStorage.getItem(documentsKey) ?? "{}")); } catch { setFiles({}); }
+  }, [documentsKey]);
 
   const saveProgress = () => {
     if (storageKey) window.sessionStorage.setItem(storageKey, JSON.stringify(data));
+    if (documentsKey) window.sessionStorage.setItem(documentsKey, JSON.stringify(files));
+  };
+
+  const saveFile = (key: string, event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setFiles(current => ({ ...current, [key]: { name: file.name, type: file.type, dataUrl: String(reader.result) } }));
+    reader.readAsDataURL(file);
   };
 
   const update = (event: ChangeEvent<HTMLInputElement>) =>
@@ -310,8 +326,11 @@ export default function RegistrationWizard({
       password: data.password,
       role,
       approvalStatus: role === "customer" ? "approved" : "pending",
+      profile: { trade: data.trade, service: data.service, district: data.district, sector: data.sector, phone: data.phone, nationalId: data.nationalId, registration: data.registration },
+      documents: Object.values(files).filter((file): file is StoredDocument => Boolean(file)),
     });
     if (storageKey) window.sessionStorage.removeItem(storageKey);
+    if (documentsKey) window.sessionStorage.removeItem(documentsKey);
     setComplete(true);
   };
 
@@ -518,13 +537,13 @@ export default function RegistrationWizard({
         <Upload
           label="National ID scan (front)"
           file={files.id}
-          onChange={(event) => setFiles({ ...files, id: event.target.files?.[0] })}
+          onChange={(event) => saveFile("id", event)}
           required
         />
         <Upload
           label="Trade certificate / qualification proof"
           file={files.certificate}
-          onChange={(event) => setFiles({ ...files, certificate: event.target.files?.[0] })}
+          onChange={(event) => saveFile("certificate", event)}
         />
         <div className="reg-note warning">
           Your documents are only used for verification. They will not be shared publicly or with customers.
@@ -535,13 +554,13 @@ export default function RegistrationWizard({
         <Upload
           label="Company registration certificate"
           file={files.registration}
-          onChange={(event) => setFiles({ ...files, registration: event.target.files?.[0] })}
+          onChange={(event) => saveFile("registration", event)}
           required
         />
         <Upload
           label="Business license / operating permit"
           file={files.license}
-          onChange={(event) => setFiles({ ...files, license: event.target.files?.[0] })}
+          onChange={(event) => saveFile("license", event)}
         />
         <div className="reg-note success">
           Once documents are reviewed, your company profile will display an <b>Accredited</b> badge, which increases trust with customers.

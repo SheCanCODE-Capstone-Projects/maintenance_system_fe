@@ -1,10 +1,11 @@
 "use client";
 
 import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import JobCard from "@/components/technician/JobCard";
 import JobFilterTabs from "@/components/technician/JobFilterTabs";
 import type { TechnicianJob, JobStatus, Priority } from "@/types/technicianJob";
+import { getCustomerRequests } from "@/lib/customerRequestStore";
 
 // Mock data for immediate rendering
 const mockJobs: TechnicianJob[] = [
@@ -114,7 +115,13 @@ export default function TechnicianJobsPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOption, setSortOption] = useState<SortOption>("newest");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedJob, setSelectedJob] = useState<TechnicianJob | null>(null);
   const itemsPerPage = 6;
+
+  useEffect(() => {
+    const requests = getCustomerRequests().map((request): TechnicianJob => ({ id: request.id, title: `${request.category} request`, customerName: "Customer", category: request.category, dateTime: request.createdAt, location: request.location, priority: request.priority === "Emergency" ? "Urgent" : "Medium", status: request.status === "Completed" ? "Completed" : request.status === "In Progress" ? "In Progress" : "Pending", description: request.description, photoName: request.photoName, photoDataUrl: request.photoDataUrl }));
+    if (requests.length) setJobs(existing => [...requests, ...existing.filter(job => !requests.some(request => request.id === job.id))]);
+  }, []);
 
   // Filter jobs based on status and search query
   const filteredJobs = useMemo(() => {
@@ -186,10 +193,7 @@ export default function TechnicianJobsPage() {
     );
   };
 
-  const handleViewDetails = (id: string) => {
-    // In a real app, this would navigate to a details page
-    console.log("View details for job:", id);
-  };
+  const handleViewDetails = (id: string) => setSelectedJob(jobs.find(job => job.id === id) ?? null);
 
   return (
     <main className="mx-auto max-w-[1600px] p-4 sm:p-6 md:p-10">
@@ -292,6 +296,7 @@ export default function TechnicianJobsPage() {
           </div>
         </div>
       )}
+      {selectedJob && <div className="fixed inset-0 z-[70] grid place-items-center bg-slate-950/60 p-4" role="dialog" aria-modal="true"><section className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl sm:p-7"><div className="flex justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-widest text-primary">Customer request</p><h2 className="mt-1 text-xl font-bold text-slate-900">{selectedJob.title}</h2></div><button onClick={() => setSelectedJob(null)} className="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-100">Close</button></div><p className="mt-5 text-sm leading-6 text-slate-700">{selectedJob.description}</p><p className="mt-3 text-sm text-slate-500">{selectedJob.location}</p>{selectedJob.photoDataUrl ? <div className="mt-5 overflow-hidden rounded-xl border"><img src={selectedJob.photoDataUrl} alt={selectedJob.photoName || "Customer uploaded photo"} className="max-h-[420px] w-full object-contain bg-slate-100"/><p className="p-3 text-xs text-slate-500">Customer uploaded: {selectedJob.photoName}</p></div> : <p className="mt-5 rounded-lg bg-slate-50 p-4 text-sm text-slate-500">The customer did not attach a photo.</p>}</section></div>}
     </main>
   );
 }

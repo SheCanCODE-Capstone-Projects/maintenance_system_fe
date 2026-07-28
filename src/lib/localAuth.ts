@@ -6,6 +6,8 @@ export type LocalAccount = {
   role: AccountRole;
   name: string;
   approvalStatus?: "pending" | "approved" | "rejected";
+  profile?: Record<string, string>;
+  documents?: Array<{ name: string; type: string; dataUrl: string }>;
 };
 
 const accountsKey = "maintenance-hub-accounts";

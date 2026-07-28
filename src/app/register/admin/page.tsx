@@ -1,16 +1,5 @@
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
+import Link from "next/link";
+
 export default function Page() {
-  return (
-    <section className="mx-auto max-w-md p-8">
-      <h1 className="mb-6 text-2xl font-bold">Create admin account</h1>
-      <p className="mb-6 text-sm text-slate-600">This path is for platform administrators only.</p>
-      <form className="space-y-4">
-        <Input label="Full name" />
-        <Input label="Email" type="email" />
-        <Input label="Password" type="password" />
-        <Button type="submit">Create admin account</Button>
-      </form>
-    </section>
-  );
+  return <main className="grid min-h-screen place-items-center bg-slate-50 p-4"><section className="w-full max-w-md rounded-2xl bg-white p-7 text-center shadow-sm"><h1 className="text-2xl font-bold text-slate-900">Administrator accounts are invite-only</h1><p className="mt-3 text-sm leading-6 text-slate-600">Admins cannot create an account from this application. Please sign in with the credentials assigned by the platform owner.</p><Link href="/login" className="mt-6 inline-block rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white">Go to sign in</Link></section></main>;
 }

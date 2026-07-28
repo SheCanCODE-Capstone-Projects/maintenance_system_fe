@@ -11,6 +11,7 @@ const links = [
   ["Verification Queue", "/dashboard/admin/verification", ClipboardCheck],
 */
 import { useState } from "react";
+import { useSignOut } from "@/hooks/useSignOut";
 import { BarChart3, ClipboardCheck, FileText, LayoutDashboard, LogOut, Menu, Settings, Tags, Users, Wrench, X } from "lucide-react";
 
 const links = [
@@ -25,6 +26,7 @@ const links = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const signOut = useSignOut();
 /* Local sidebar variant superseded by the responsive merged sidebar.
 
   return (
@@ -61,7 +63,7 @@ export default function AdminSidebar() {
       </nav>
       <div className="border-t border-white/10 p-4">
         <div className="flex items-center gap-3"><div className="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-bold text-white">AD</div><div><p className="text-sm font-semibold text-white">Admin</p><p className="text-xs text-teal-200">Administrator</p></div></div>
-        <Link href="/login" className="mt-4 flex items-center gap-2 text-xs text-teal-200 hover:text-white"><LogOut size={14} />Sign out</Link>
+        <button onClick={signOut} className="mt-4 flex items-center gap-2 text-xs text-teal-200 hover:text-white"><LogOut size={14} />Sign out</button>
       </div>
     </>
   );

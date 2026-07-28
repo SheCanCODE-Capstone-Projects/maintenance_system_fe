@@ -2,10 +2,10 @@
 
 import { FormEvent, useState } from "react";
 import { saveCustomerRequest, type CustomerRequest, type RequestPriority } from "@/lib/customerRequestStore";
+import { getCategories } from "@/lib/categoryStore";
 
 type Props = { open: boolean; onClose: () => void; onSubmitted?: (request: CustomerRequest) => void };
 
-const categories = ["Plumbing", "Electrical", "Carpentry", "Painting", "Cleaning", "Mechanical", "Other"];
 const technicians = [
   { id: "alice", name: "Alice Johnson", category: "Plumbing", area: "Gasabo, Kacyiru", rating: "4.9" },
   { id: "david", name: "David Brown", category: "Electrical", area: "Gasabo, Remera", rating: "4.8" },
@@ -21,6 +21,8 @@ export default function CustomerRequestModal({ open, onClose, onSubmitted }: Pro
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [photoName, setPhotoName] = useState("");
+  const [photoDataUrl, setPhotoDataUrl] = useState("");
+  const [categories] = useState<string[]>(() => getCategories().filter((item) => item !== "Other").concat("Other"));
   const [technicianId, setTechnicianId] = useState("");
   const [submitted, setSubmitted] = useState<CustomerRequest | null>(null);
 
@@ -31,6 +33,13 @@ export default function CustomerRequestModal({ open, onClose, onSubmitted }: Pro
   const close = () => {
     setStep(1); setSubmitted(null); setTechnicianId(""); onClose();
   };
+  const selectPhoto = (file?: File) => {
+    if (!file) { setPhotoName(""); setPhotoDataUrl(""); return; }
+    setPhotoName(file.name);
+    const reader = new FileReader();
+    reader.onload = () => setPhotoDataUrl(String(reader.result));
+    reader.readAsDataURL(file);
+  };
   const nextFromDetails = (event: FormEvent) => {
     event.preventDefault();
     setStep(2);
@@ -39,7 +48,7 @@ export default function CustomerRequestModal({ open, onClose, onSubmitted }: Pro
     if (!chosenTechnician) return;
     const request: CustomerRequest = {
       id: `REQ-${Date.now().toString().slice(-6)}`,
-      category, description, location, priority, photoName,
+      category, description, location, priority, photoName, photoDataUrl,
       technicianName: chosenTechnician.name, technicianArea: chosenTechnician.area,
       status: "Pending", createdAt: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
     };
@@ -62,7 +71,7 @@ export default function CustomerRequestModal({ open, onClose, onSubmitted }: Pro
             <fieldset><legend className="mb-3 text-xs font-bold tracking-[.12em] text-slate-600">PRIORITY</legend><div className="grid grid-cols-2 gap-3"><button type="button" onClick={() => setPriority("Normal")} className={`rounded-xl border p-4 text-left ${priority === "Normal" ? "border-primary bg-orange-50" : "border-slate-200"}`}><b className="block text-sm">Normal</b><span className="mt-1 block text-xs text-slate-500">Schedule a standard visit</span></button><button type="button" onClick={() => setPriority("Emergency")} className={`rounded-xl border p-4 text-left ${priority === "Emergency" ? "border-rose-500 bg-rose-50" : "border-slate-200"}`}><b className="block text-sm text-rose-700">Emergency</b><span className="mt-1 block text-xs text-slate-500">Shown first to available technicians</span></button></div></fieldset>
             <label className="block text-sm font-semibold text-slate-700">Problem description<textarea required value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Describe the problem and when it started…" className="mt-2 h-28 w-full resize-none rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none focus:border-primary focus:ring-2 focus:ring-orange-100" /></label>
             <label className="block text-sm font-semibold text-slate-700">Service location<input required value={location} onChange={(event) => setLocation(event.target.value)} placeholder="District, sector, neighbourhood or address" className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none focus:border-primary focus:ring-2 focus:ring-orange-100" /></label>
-            <label className="block text-sm font-semibold text-slate-700">Photo (optional)<input type="file" accept="image/*" onChange={(event) => setPhotoName(event.target.files?.[0]?.name ?? "")} className="mt-2 block w-full text-sm font-normal text-slate-500 file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:px-3 file:py-2 file:font-semibold file:text-primary" /></label>
+            <label className="block text-sm font-semibold text-slate-700">Photo (optional)<input type="file" accept="image/*" onChange={(event) => selectPhoto(event.target.files?.[0])} className="mt-2 block w-full text-sm font-normal text-slate-500 file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:px-3 file:py-2 file:font-semibold file:text-primary" />{photoName && <span className="mt-2 block text-xs font-normal text-emerald-700">Attached: {photoName}</span>}</label>
             <div className="flex justify-end"><button className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white">Choose technician →</button></div>
           </form> : step === 2 ? <div><p className="mb-4 text-sm text-slate-600">Only verified technicians matching your service are shown. Select the professional you prefer.</p><div className="space-y-3">{matchingTechnicians.map((technician) => <button type="button" key={technician.id} onClick={() => setTechnicianId(technician.id)} className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition ${technicianId === technician.id ? "border-primary bg-orange-50 ring-2 ring-orange-100" : "border-slate-200 hover:border-orange-200"}`}><span className="grid h-11 w-11 place-items-center rounded-full bg-[#0d3330] text-sm font-bold text-white">{technician.name.split(" ").map((word) => word[0]).join("")}</span><span className="flex-1"><b className="block text-sm text-slate-800">{technician.name} <span className="ml-2 text-xs font-semibold text-emerald-700">✓ Verified</span></b><span className="mt-1 block text-xs text-slate-500">{technician.category} · {technician.area}</span></span><span className="text-sm font-bold text-amber-600">★ {technician.rating}</span></button>)}</div><div className="mt-6 flex justify-between"><button onClick={() => setStep(1)} className="rounded-lg border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600">Back</button><button disabled={!technicianId} onClick={() => setStep(3)} className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">Review request →</button></div></div> : <div className="space-y-4"><p className="text-sm text-slate-600">Check the details below before sending this request.</p><dl className="divide-y rounded-xl border border-slate-200 text-sm"><div className="flex justify-between gap-4 p-4"><dt className="text-slate-500">Service</dt><dd className="font-semibold">{category} · {priority}</dd></div><div className="flex justify-between gap-4 p-4"><dt className="text-slate-500">Location</dt><dd className="text-right font-semibold">{location}</dd></div><div className="flex justify-between gap-4 p-4"><dt className="text-slate-500">Technician</dt><dd className="font-semibold">{chosenTechnician?.name} · Verified</dd></div><div className="p-4"><dt className="text-slate-500">Problem</dt><dd className="mt-1 leading-6">{description}</dd></div></dl><div className="flex justify-between"><button onClick={() => setStep(2)} className="rounded-lg border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600">Back</button><button onClick={submit} className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white">Submit request</button></div></div>}
         </div>
