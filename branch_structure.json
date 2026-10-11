@@ -1,0 +1,33 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "6-companydashboard-my-team",
+    "Registration-Page-on-All-roles",
+    "agent/maintenance-hub-company-dashboard-publish",
+    "feature/landing-login-page",
+    "main",
+    "origin",
+    "testing",
+    "ui-features"
+  ],
+  "parent": {
+    "6-companydashboard-my-team": "main",
+    "Registration-Page-on-All-roles": "main",
+    "agent/maintenance-hub-company-dashboard-publish": "main",
+    "feature/landing-login-page": "main",
+    "main": null,
+    "origin": "main",
+    "testing": "main",
+    "ui-features": "main"
+  },
+  "order": [
+    "main",
+    "6-companydashboard-my-team",
+    "Registration-Page-on-All-roles",
+    "agent/maintenance-hub-company-dashboard-publish",
+    "feature/landing-login-page",
+    "origin",
+    "testing",
+    "ui-features"
+  ]
+}
